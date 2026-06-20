@@ -1,510 +1,708 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web browser · URL viewer</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Browser · URL Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: linear-gradient(145deg, #f6f9fc 0%, #e9f1f8 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      padding: 1.5rem;
-    }
+        body {
+            background: linear-gradient(145deg, #f0f4f8 0%, #dae4ed 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            padding: 1.5rem;
+        }
 
-    .browser-card {
-      max-width: 1300px;
-      width: 100%;
-      height: 95vh;
-      max-height: 900px;
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 2.5rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 8px 20px -8px rgba(0, 20, 40, 0.1);
-      padding: 1.75rem 1.75rem 1.5rem 1.75rem;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.2s ease;
-      border: 1px solid rgba(255, 255, 255, 0.6);
-    }
+        .browser-card {
+            max-width: 1300px;
+            width: 100%;
+            height: 95vh;
+            max-height: 920px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 2.5rem;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3), 0 10px 30px -10px rgba(0, 20, 40, 0.15);
+            padding: 1.75rem 1.75rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.2s;
+        }
 
-    .browser-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.25rem;
-      background: rgba(240, 246, 252, 0.6);
-      padding: 0.6rem 1rem 0.6rem 1.2rem;
-      border-radius: 60px;
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
-    }
+        .browser-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.5rem 1rem 0.5rem 1.2rem;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
 
-    .browser-header .icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #1e3c5c;
-      font-size: 1.4rem;
-      line-height: 1;
-      margin-right: 0.2rem;
-    }
+        .browser-header .icon {
+            display: flex;
+            align-items: center;
+            color: #1a365d;
+            font-size: 1.5rem;
+        }
 
-    .browser-header .icon svg {
-      width: 28px;
-      height: 28px;
-      stroke: #1e3c5c;
-      stroke-width: 1.8;
-      fill: none;
-    }
+        .browser-header .icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: #1a365d;
+            stroke-width: 1.8;
+            fill: none;
+        }
 
-    .url-form {
-      display: flex;
-      flex: 1;
-      min-width: 200px;
-      gap: 0.5rem;
-      align-items: center;
-      background: white;
-      border-radius: 60px;
-      padding: 0.1rem 0.1rem 0.1rem 1.2rem;
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);
-      border: 1px solid rgba(0, 0, 0, 0.04);
-    }
+        .url-form {
+            display: flex;
+            flex: 1;
+            min-width: 200px;
+            gap: 0.5rem;
+            align-items: center;
+            background: white;
+            border-radius: 60px;
+            padding: 0.1rem 0.1rem 0.1rem 1.2rem;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
 
-    .url-form input {
-      flex: 1;
-      border: none;
-      padding: 0.7rem 0;
-      font-size: 0.95rem;
-      background: transparent;
-      outline: none;
-      color: #0b1e2e;
-      font-weight: 450;
-      letter-spacing: 0.01em;
-      min-width: 120px;
-    }
+        .url-form input {
+            flex: 1;
+            border: none;
+            padding: 0.7rem 0;
+            font-size: 0.95rem;
+            background: transparent;
+            outline: none;
+            color: #0b1e2e;
+            font-weight: 450;
+            min-width: 100px;
+        }
 
-    .url-form input::placeholder {
-      color: #8da0b3;
-      font-weight: 400;
-      opacity: 0.8;
-    }
+        .url-form input::placeholder {
+            color: #8da0b3;
+            font-weight: 400;
+        }
 
-    .url-form button {
-      background: #0a2a44;
-      border: none;
-      color: white;
-      font-weight: 500;
-      padding: 0.65rem 1.6rem;
-      border-radius: 40px;
-      font-size: 0.9rem;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      transition: 0.15s ease;
-      box-shadow: 0 4px 8px rgba(10, 42, 68, 0.15);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
+        .url-form button {
+            background: #1a365d;
+            border: none;
+            color: white;
+            font-weight: 500;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.15s ease;
+            box-shadow: 0 4px 12px rgba(26, 54, 93, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
 
-    .url-form button:hover {
-      background: #123b5e;
-      transform: scale(0.98);
-      box-shadow: 0 6px 12px rgba(10, 42, 68, 0.2);
-    }
+        .url-form button:hover {
+            background: #234b7a;
+            transform: scale(0.97);
+        }
 
-    .url-form button:active {
-      transform: scale(0.96);
-    }
+        .url-form button:active {
+            transform: scale(0.94);
+        }
 
-    .url-form button svg {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-      stroke-width: 2.2;
-      fill: none;
-    }
+        .url-form button svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            fill: none;
+        }
 
-    .browser-actions {
-      display: flex;
-      gap: 0.6rem;
-      margin-left: 0.2rem;
-    }
+        .browser-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
 
-    .browser-actions button {
-      background: transparent;
-      border: none;
-      width: 34px;
-      height: 34px;
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: #1f405e;
-      transition: 0.1s ease;
-      font-size: 1.3rem;
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(2px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-    }
+        .browser-actions button {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            width: 36px;
+            height: 36px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #1a365d;
+            transition: 0.1s ease;
+            font-size: 1.2rem;
+        }
 
-    .browser-actions button:hover {
-      background: rgba(255, 255, 255, 0.7);
-      transform: scale(0.94);
-      color: #0a1f30;
-    }
+        .browser-actions button:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(0.93);
+        }
 
-    .browser-actions button:active {
-      transform: scale(0.88);
-    }
+        .browser-actions button:active {
+            transform: scale(0.85);
+        }
 
-    .browser-frame-wrapper {
-      flex: 1;
-      border-radius: 1.8rem;
-      overflow: hidden;
-      background: #ffffff;
-      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02), 0 8px 24px rgba(0, 20, 40, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      position: relative;
-    }
+        .browser-frame-wrapper {
+            flex: 1;
+            border-radius: 1.8rem;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02), 0 8px 24px rgba(0, 20, 40, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            position: relative;
+            min-height: 300px;
+        }
 
-    #browserFrame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: white;
-      display: block;
-    }
+        #browserFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+            display: block;
+        }
 
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0.9rem;
-      padding: 0 0.5rem;
-      font-size: 0.8rem;
-      color: #2f4a66;
-      letter-spacing: 0.2px;
-      opacity: 0.8;
-      font-weight: 450;
-      flex-wrap: wrap;
-      gap: 0.3rem;
-    }
+        /* overlay for blocked sites */
+        .blocked-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 1.8rem;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
 
-    .status-bar span:last-child {
-      font-family: 'SF Mono', 'Menlo', monospace;
-      background: rgba(0,0,0,0.02);
-      padding: 0.2rem 0.8rem;
-      border-radius: 30px;
-      background: rgba(255,255,255,0.3);
-      backdrop-filter: blur(2px);
-    }
+        .blocked-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-    .error-message {
-      color: #b13e3e;
-      background: rgba(255, 235, 235, 0.7);
-      backdrop-filter: blur(4px);
-      padding: 0.3rem 1.2rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 450;
-      border: 1px solid rgba(180, 70, 70, 0.15);
-    }
+        .blocked-overlay .emoji-big {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
 
-    @media (max-width: 680px) {
-      .browser-card {
-        padding: 1.2rem;
-        border-radius: 1.8rem;
-        height: 92vh;
-      }
-      .browser-header {
-        flex-direction: column;
-        align-items: stretch;
-        background: transparent;
-        box-shadow: none;
-        padding: 0;
-        gap: 0.6rem;
-      }
-      .url-form {
-        padding: 0.1rem 0.1rem 0.1rem 1rem;
-      }
-      .url-form button {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.85rem;
-      }
-      .browser-actions {
-        justify-content: flex-end;
-        margin-left: 0;
-      }
-      .status-bar {
-        font-size: 0.7rem;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
+        .blocked-overlay h3 {
+            font-size: 1.3rem;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+        }
 
-    /* small loading / feedback */
-    .loading-indicator {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(10, 42, 68, 0.15);
-      border-top-color: #0a2a44;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin-right: 6px;
-      vertical-align: middle;
-    }
+        .blocked-overlay p {
+            color: #4a5f7a;
+            max-width: 420px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
+        .blocked-overlay .btn-group {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .blocked-overlay .btn-group button {
+            padding: 0.6rem 1.6rem;
+            border-radius: 40px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
+
+        .blocked-overlay .btn-primary {
+            background: #1a365d;
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 54, 93, 0.2);
+        }
+
+        .blocked-overlay .btn-primary:hover {
+            background: #234b7a;
+            transform: scale(0.97);
+        }
+
+        .blocked-overlay .btn-secondary {
+            background: #e8edf3;
+            color: #1a365d;
+        }
+
+        .blocked-overlay .btn-secondary:hover {
+            background: #d5dce6;
+            transform: scale(0.97);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.8rem;
+            padding: 0 0.5rem;
+            font-size: 0.8rem;
+            color: #2f4a66;
+            font-weight: 450;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .status-bar .status-left {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .status-bar .status-left .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.green {
+            background: #2b8c5e;
+        }
+        .dot.yellow {
+            background: #d4a02b;
+        }
+        .dot.red {
+            background: #b13e3e;
+        }
+        .dot.gray {
+            background: #8a9bb0;
+        }
+
+        .status-bar .url-display {
+            font-family: 'SF Mono', 'Menlo', monospace;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 0.2rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .status-bar .open-new-btn {
+            background: none;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 0.15rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            color: #1a365d;
+            transition: 0.1s ease;
+        }
+
+        .status-bar .open-new-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 680px) {
+            .browser-card {
+                padding: 1rem;
+                border-radius: 1.8rem;
+                height: 92vh;
+            }
+            .browser-header {
+                flex-direction: column;
+                background: transparent;
+                padding: 0;
+                gap: 0.6rem;
+                border: none;
+            }
+            .url-form {
+                padding: 0.1rem 0.1rem 0.1rem 1rem;
+                width: 100%;
+            }
+            .url-form button {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            .browser-actions {
+                align-self: flex-end;
+            }
+            .status-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
+            .status-bar .url-display {
+                max-width: 100%;
+                width: 100%;
+            }
+            .blocked-overlay h3 {
+                font-size: 1.1rem;
+            }
+            .blocked-overlay .emoji-big {
+                font-size: 3rem;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
 
-<div class="browser-card" role="main" aria-label="Web browser">
-  <div class="browser-header">
-    <div class="icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="2" y1="12" x2="22" y2="12" />
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-      </svg>
+    <div class="browser-card" role="main" aria-label="Web browser">
+        <!-- Header -->
+        <div class="browser-header">
+            <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+            </div>
+
+            <form id="urlForm" class="url-form" autocomplete="off">
+                <input
+                type="text"
+                id="urlInput"
+                placeholder="Enter URL … e.g., example.com"
+                value="example.com"
+                spellcheck="false"
+                aria-label="Website address"
+                />
+                <button type="submit" id="goButton">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="M12 5l7 7-7 7" />
+                    </svg>
+                    <span>Browse</span>
+                </button>
+            </form>
+
+            <div class="browser-actions">
+                <button id="reloadButton" aria-label="Reload page" title="Reload">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 3v6h-6" />
+                        <path d="M3 21v-6h6" />
+                        <path d="M18.364 5.636a9 9 0 1 1-12.728 12.728" />
+                    </svg>
+                </button>
+                <button id="homeButton" aria-label="Go to example" title="Home">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Frame -->
+        <div class="browser-frame-wrapper">
+            <iframe
+            id="browserFrame"
+            src="about:blank"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+            loading="eager"
+            referrerpolicy="strict-origin-when-cross-origin"
+            title="Browsed website content"
+            ></iframe>
+
+            <!-- Blocked overlay -->
+            <div id="blockedOverlay" class="blocked-overlay">
+                <div class="emoji-big">🔒</div>
+                <h3>Site can't be embedded</h3>
+                <p>
+                    This website prevents being displayed inside an iframe for security reasons.
+                    You can open it in a new tab instead.
+                </p>
+                <div class="btn-group">
+                    <button id="openNewTabBtn" class="btn-primary">Open in new tab</button>
+                    <button id="dismissOverlayBtn" class="btn-secondary">Dismiss</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="dot green" id="statusDot"></span>
+                <span id="statusMessage">Ready</span>
+            </div>
+            <span class="url-display" id="urlDisplay">—</span>
+            <button class="open-new-btn" id="openNewTabSmall">↗ Open</button>
+        </div>
     </div>
 
-    <form id="urlForm" class="url-form" autocomplete="off">
-      <input 
-        type="text" 
-        id="urlInput" 
-        placeholder="Enter URL … https://example.com" 
-        value="https://example.com"
-        spellcheck="false"
-        aria-label="Website address"
-      />
-      <button type="submit" id="goButton">
-        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14" />
-          <path d="M12 5l7 7-7 7" />
-        </svg>
-        <span>Browse</span>
-      </button>
-    </form>
+    <script>
+        (function() {
+            const urlInput = document.getElementById('urlInput');
+            const urlForm = document.getElementById('urlForm');
+            const goButton = document.getElementById('goButton');
+            const reloadButton = document.getElementById('reloadButton');
+            const homeButton = document.getElementById('homeButton');
+            const browserFrame = document.getElementById('browserFrame');
+            const statusMessage = document.getElementById('statusMessage');
+            const statusDot = document.getElementById('statusDot');
+            const urlDisplay = document.getElementById('urlDisplay');
+            const blockedOverlay = document.getElementById('blockedOverlay');
+            const openNewTabBtn = document.getElementById('openNewTabBtn');
+            const dismissOverlayBtn = document.getElementById('dismissOverlayBtn');
+            const openNewTabSmall = document.getElementById('openNewTabSmall');
 
-    <div class="browser-actions">
-      <button id="reloadButton" aria-label="Reload page" title="Reload">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 3v6h-6" />
-          <path d="M3 21v-6h6" />
-          <path d="M18.364 5.636a9 9 0 1 1-12.728 12.728" />
-        </svg>
-      </button>
-      <button id="homeButton" aria-label="Go to example" title="Example">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" />
-        </svg>
-      </button>
-    </div>
-  </div>
+            const DEFAULT_URL = 'https://example.com';
+            let currentUrl = DEFAULT_URL;
+            let isBlocked = false;
 
-  <div class="browser-frame-wrapper">
-    <iframe 
-      id="browserFrame"
-      src="https://example.com"
-      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-      loading="eager"
-      referrerpolicy="strict-origin-when-cross-origin"
-      title="Browsed website content"
-    ></iframe>
-  </div>
+            // ---- helpers ----
+            function normalizeUrl(raw) {
+                let trimmed = raw.trim();
+                if (!trimmed) return null;
+                if (!/^[a-zA-Z]+:\/\//.test(trimmed)) {
+                    trimmed = 'https://' + trimmed;
+                }
+                try {
+                    const urlObj = new URL(trimmed);
+                    if (!['http:', 'https:', 'ftp:'].includes(urlObj.protocol)) return null;
+                    return urlObj.href;
+                } catch (_) {
+                    return null;
+                }
+            }
 
-  <div class="status-bar">
-    <span id="statusMessage">🌐 ready</span>
-    <span id="urlDisplay">https://example.com</span>
-  </div>
-</div>
+            function setStatus(message, type = 'info') {
+                statusMessage.textContent = message;
+                statusDot.className = 'dot';
+                if (type === 'loading') {
+                    statusDot.classList.add('yellow');
+                } else if (type === 'error') {
+                    statusDot.classList.add('red');
+                } else if (type === 'success') {
+                    statusDot.classList.add('green');
+                } else {
+                    statusDot.classList.add('gray');
+                }
+            }
 
-<script>
-  (function() {
-    const urlInput = document.getElementById('urlInput');
-    const goButton = document.getElementById('goButton');
-    const reloadButton = document.getElementById('reloadButton');
-    const homeButton = document.getElementById('homeButton');
-    const browserFrame = document.getElementById('browserFrame');
-    const statusMessage = document.getElementById('statusMessage');
-    const urlDisplay = document.getElementById('urlDisplay');
+            function showBlockedOverlay(show) {
+                if (show) {
+                    blockedOverlay.classList.add('visible');
+                    isBlocked = true;
+                } else {
+                    blockedOverlay.classList.remove('visible');
+                    isBlocked = false;
+                }
+            }
 
-    // Default URL (used also as home)
-    const DEFAULT_URL = 'https://example.com';
+            function updateUrlDisplay(url) {
+                if (url && url !== 'about:blank') {
+                    urlDisplay.textContent = url;
+                } else {
+                    urlDisplay.textContent = '—';
+                }
+            }
 
-    // Helper: ensure proper URL format, if no protocol, add https://
-    function normalizeUrl(raw) {
-      let trimmed = raw.trim();
-      if (!trimmed) return null;
+            // ---- core load function ----
+            function loadUrl(rawUrl, showOverlayOnBlock = true) {
+                const normalized = normalizeUrl(rawUrl);
+                if (!normalized) {
+                    setStatus('Invalid URL', 'error');
+                    updateUrlDisplay('—');
+                    showBlockedOverlay(false);
+                    return false;
+                }
 
-      // If no protocol, prepend https://
-      if (!/^[a-zA-Z]+:\/\//.test(trimmed)) {
-        trimmed = 'https://' + trimmed;
-      }
+                currentUrl = normalized;
+                urlInput.value = normalized;
+                updateUrlDisplay(normalized);
+                setStatus('Loading…', 'loading');
+                showBlockedOverlay(false);
 
-      try {
-        const urlObj = new URL(trimmed);
-        // allow http, https, ftp (but we mainly use https)
-        if (!['http:', 'https:', 'ftp:'].includes(urlObj.protocol)) {
-          return null;
-        }
-        return urlObj.href;
-      } catch (_) {
-        return null;
-      }
-    }
+                try {
+                    browserFrame.src = normalized;
+                    return true;
+                } catch (e) {
+                    setStatus('Error loading', 'error');
+                    return false;
+                }
+            }
 
-    // Load URL in iframe and update UI
-    function loadUrl(url) {
-      if (!url) return false;
-      const normalized = normalizeUrl(url);
-      if (!normalized) {
-        statusMessage.textContent = '⚠️ invalid URL';
-        urlDisplay.textContent = '—';
-        return false;
-      }
+            // ---- open in new tab ----
+            function openCurrentInNewTab() {
+                const url = browserFrame.src;
+                if (url && url !== 'about:blank' && url.startsWith('http')) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                } else {
+                    // fallback: use currentUrl
+                    if (currentUrl && currentUrl !== 'about:blank') {
+                        window.open(currentUrl, '_blank', 'noopener,noreferrer');
+                    }
+                }
+            }
 
-      try {
-        browserFrame.src = normalized;
-        urlDisplay.textContent = normalized;
-        statusMessage.textContent = '🔄 loading …';
-        // update input field to show the normalized version
-        urlInput.value = normalized;
-        return true;
-      } catch (e) {
-        statusMessage.textContent = '❌ error loading';
-        return false;
-      }
-    }
+            // ---- reload ----
+            function reloadFrame() {
+                if (browserFrame.src && browserFrame.src !== 'about:blank' && browserFrame.src.startsWith('http')) {
+                    // force reload by re-assigning
+                    const src = browserFrame.src;
+                    browserFrame.src = 'about:blank';
+                    setTimeout(() => {
+                        browserFrame.src = src;
+                        setStatus('Reloading…', 'loading');
+                    }, 80);
+                } else {
+                    loadUrl(DEFAULT_URL);
+                }
+            }
 
-    // Handle form submission
-    function handleSubmit(e) {
-      e.preventDefault();
-      const rawUrl = urlInput.value;
-      const success = loadUrl(rawUrl);
-      if (!success) {
-        // if invalid, revert input to previous valid value (or default)
-        const currentSrc = browserFrame.src;
-        if (currentSrc && currentSrc !== 'about:blank') {
-          urlInput.value = currentSrc;
-          statusMessage.textContent = '↩️ reverted to current';
-        } else {
-          urlInput.value = DEFAULT_URL;
-          loadUrl(DEFAULT_URL);
-        }
-      }
-    }
+            // ---- home ----
+            function goHome() {
+                loadUrl(DEFAULT_URL);
+                setStatus('Home', 'info');
+            }
 
-    // Reload current iframe
-    function reloadFrame() {
-      const current = browserFrame.src;
-      if (current && current !== 'about:blank' && current.startsWith('http')) {
-        // force reload by re-assigning src
-        browserFrame.src = current;
-        statusMessage.textContent = '🔄 reloading …';
-        urlDisplay.textContent = current;
-        urlInput.value = current;
-      } else {
-        // if empty or invalid, load default
-        loadUrl(DEFAULT_URL);
-      }
-    }
+            // ---- handle iframe load (detect blocking) ----
+            function handleFrameLoad() {
+                try {
+                    // Try to access frame content — if blocked, this throws
+                    const frameDoc = browserFrame.contentDocument || browserFrame.contentWindow?.document;
+                    if (!frameDoc) {
+                        // cross-origin but loaded — that's actually fine (site allows embedding)
+                        setStatus('Loaded (cross-origin)', 'success');
+                        showBlockedOverlay(false);
+                        const src = browserFrame.src;
+                        if (src && src !== 'about:blank') {
+                            updateUrlDisplay(src);
+                            urlInput.value = src;
+                            currentUrl = src;
+                        }
+                        return;
+                    }
 
-    // Go to default/home
-    function goHome() {
-      loadUrl(DEFAULT_URL);
-      urlInput.value = DEFAULT_URL;
-      statusMessage.textContent = '🏠 home';
-    }
+                    // If we can access, check if it's a real page
+                    if (frameDoc && frameDoc.location && frameDoc.location.href !== 'about:blank') {
+                        setStatus('Loaded', 'success');
+                        showBlockedOverlay(false);
+                        const src = frameDoc.location.href;
+                        updateUrlDisplay(src);
+                        urlInput.value = src;
+                        currentUrl = src;
+                    } else {
+                        // empty or blank
+                        setStatus('Empty page', 'info');
+                    }
+                } catch (e) {
+                    // ----- BLOCKED / CROSS-ORIGIN ERROR -----
+                    // This happens when the site sets X-Frame-Options: DENY or SAMEORIGIN
+                    // but the iframe may still show a blank or error page.
+                    // We show the overlay to help the user.
+                    const src = browserFrame.src;
+                    if (src && src !== 'about:blank' && src.startsWith('http')) {
+                        // It's a real URL, but blocked
+                        setStatus('Blocked by site', 'error');
+                        showBlockedOverlay(true);
+                        updateUrlDisplay(src);
+                        urlInput.value = src;
+                        currentUrl = src;
+                    } else {
+                        setStatus('Error', 'error');
+                    }
+                }
+            }
 
-    // ---- Event listeners ----
-    urlForm.addEventListener('submit', handleSubmit);
-    goButton.addEventListener('click', handleSubmit);
+            // ---- event listeners ----
+            urlForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const val = urlInput.value;
+                if (val.trim()) {
+                    loadUrl(val);
+                }
+            });
 
-    reloadButton.addEventListener('click', reloadFrame);
+            goButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const val = urlInput.value;
+                if (val.trim()) {
+                    loadUrl(val);
+                }
+            });
 
-    homeButton.addEventListener('click', goHome);
+            reloadButton.addEventListener('click', reloadFrame);
 
-    // When iframe loads, update status (note: iframe onload works but might not fire for all cross-origin)
-    browserFrame.addEventListener('load', function() {
-      try {
-        // Check if we can access location (same-origin) otherwise just show generic loaded
-        const frameUrl = browserFrame.contentWindow?.location?.href || browserFrame.src;
-        statusMessage.textContent = '✅ loaded';
-        if (frameUrl && frameUrl !== 'about:blank') {
-          urlDisplay.textContent = frameUrl;
-          urlInput.value = frameUrl;
-        } else {
-          // fallback
-          urlDisplay.textContent = browserFrame.src || '—';
-        }
-      } catch (e) {
-        // cross-origin: we still update status
-        statusMessage.textContent = '✅ loaded (cross-origin)';
-        const src = browserFrame.src;
-        if (src && src !== 'about:blank') {
-          urlDisplay.textContent = src;
-          urlInput.value = src;
-        }
-      }
-    });
+            homeButton.addEventListener('click', goHome);
 
-    // Handle iframe errors (e.g., blocked, unreachable) – not all browsers fire error event on iframe
-    browserFrame.addEventListener('error', function() {
-      statusMessage.textContent = '⚠️ failed to load';
-    });
+            openNewTabBtn.addEventListener('click', function() {
+                openCurrentInNewTab();
+                showBlockedOverlay(false);
+            });
 
-    // Initialize with default URL
-    (function init() {
-      // set default value
-      urlInput.value = DEFAULT_URL;
-      browserFrame.src = DEFAULT_URL;
-      urlDisplay.textContent = DEFAULT_URL;
-      statusMessage.textContent = '🌐 ready';
-    })();
+            dismissOverlayBtn.addEventListener('click', function() {
+                showBlockedOverlay(false);
+                setStatus('Dismissed', 'info');
+            });
 
-    // Extra: if user presses Enter in input, form handles it
-    // Also handle paste/change to keep status updated
-    urlInput.addEventListener('change', function() {
-      // not auto-load; user must press submit / browse
-    });
+            openNewTabSmall.addEventListener('click', openCurrentInNewTab);
 
-    // Little extra: if the frame src changes externally (like redirect) we sync input
-    // But we can't capture all, we use load event mostly.
+            browserFrame.addEventListener('load', handleFrameLoad);
 
-    // Handle cases where iframe is blank (e.g., after error)
-    window.addEventListener('load', function() {
-      // ensure iframe has something
-      if (!browserFrame.src || browserFrame.src === 'about:blank') {
-        loadUrl(DEFAULT_URL);
-      }
-    });
+            // Error event for iframe
+            browserFrame.addEventListener('error', function() {
+                setStatus('Failed to load', 'error');
+                const src = browserFrame.src;
+                if (src && src !== 'about:blank' && src.startsWith('http')) {
+                    showBlockedOverlay(true);
+                }
+            });
 
-    // also if user double-clicks status bar, reload
-    statusMessage.addEventListener('dblclick', function() {
-      reloadFrame();
-    });
+            // ---- init ----
+            function init() {
+                urlInput.value = 'example.com';
+                loadUrl(DEFAULT_URL);
+                setStatus('Ready', 'info');
+            }
 
-  })();
-</script>
+            init();
+
+            // ---- extra: double-click status to reload ----
+            statusMessage.addEventListener('dblclick', reloadFrame);
+
+            // ---- keyboard shortcut: Ctrl+Enter to open in new tab ----
+            urlInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    const val = urlInput.value;
+                    if (val.trim()) {
+                        const normalized = normalizeUrl(val);
+                        if (normalized) {
+                            window.open(normalized, '_blank', 'noopener,noreferrer');
+                        }
+                    }
+                }
+            });
+
+        })();
+    </script>
+
 </body>
 </html>
